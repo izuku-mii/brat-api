@@ -113,6 +113,11 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+        .image-preview {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 2px solid #374151;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-slate-300 antialiased font-mono min-h-screen">
@@ -139,14 +144,14 @@
         <div class="mb-8">
             <div class="flex items-center justify-between mb-3">
                 <h2 class="text-lg font-semibold text-slate-300 flex items-center">
-                    <span class="material-icons text-xl mr-2 text-izuku">auto_awesome</span>
-                    Brat Generator
+                    <span class="material-icons text-xl mr-2 text-izuku">image</span>
+                    Brat Image Generator
                 </h2>
             </div>
             
             <div class="bg-gray-800 border border-gray-700 p-4">
                 <div class="mb-4">
-                    <label class="block text-slate-300 text-sm mb-2">Masukkan teks:</label>
+                    <label class="block text-slate-300 text-sm mb-2">Masukkan teks untuk gambar:</label>
                     <input type="text" id="textInput" placeholder="Ketik teks di sini..." 
                            class="w-full bg-gray-700 border border-gray-600 text-white text-sm rounded px-3 py-2 focus:outline-none focus:border-izuku"
                            value="Halo dunia">
@@ -157,16 +162,19 @@
                         <span class="material-icons text-sm mr-2">send</span>
                         Send Request
                     </button>
-                    <button id="copyBtn" class="border border-izuku text-izuku hover:bg-izuku/10 px-4 py-2 text-sm font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">content_copy</span>
-                        Copy
+                    <button id="downloadBtn" class="border border-izuku text-izuku hover:bg-izuku/10 px-4 py-2 text-sm font-medium transition-colors duration-150 rounded flex items-center">
+                        <span class="material-icons text-sm mr-2">download</span>
+                        Download
                     </button>
                 </div>
                 
                 <div id="resultContainer" class="hidden">
-                    <label class="block text-slate-300 text-sm mb-2">Hasil Brat Text:</label>
-                    <div class="bg-gray-700 border border-gray-600 rounded p-3">
-                        <p id="resultText" class="text-white text-sm break-words"></p>
+                    <label class="block text-slate-300 text-sm mb-2">Hasil Gambar:</label>
+                    <div class="bg-gray-700 border border-gray-600 rounded p-3 flex justify-center">
+                        <img id="resultImage" class="image-preview max-w-full h-auto" alt="Generated Brat Image">
+                    </div>
+                    <div class="mt-2 text-center">
+                        <p class="text-slate-400 text-xs">Format: JPEG | Response: image/jpeg</p>
                     </div>
                 </div>
                 
@@ -178,6 +186,9 @@
                     </div>
                     <p class="text-slate-400 text-xs mt-2">
                         Contoh: <code class="text-izuku">/api?text=Halo%20dunia</code>
+                    </p>
+                    <p class="text-slate-400 text-xs mt-1">
+                        Response: <code class="text-izuku">image/jpeg</code>
                     </p>
                 </div>
             </div>
@@ -222,12 +233,12 @@
                 <div class="bg-gray-800 border border-gray-700 p-4">
                     <div class="flex items-center gap-3 mb-2">
                         <div class="feature-icon bg-gradient-to-r from-izuku-500 to-izuku-700 w-8 h-8 rounded flex items-center justify-center">
-                            <span class="material-icons text-white text-sm">auto_awesome</span>
+                            <span class="material-icons text-white text-sm">image</span>
                         </div>
-                        <h3 class="font-bold text-slate-300 text-sm">Brat Text Generator</h3>
+                        <h3 class="font-bold text-slate-300 text-sm">Brat Image Generator</h3>
                     </div>
                     <p class="text-slate-400 text-xs">
-                        Ubah teks biasa menjadi teks brat dengan gaya unik menggunakan endpoint <code class="text-izuku">/api?text=</code>
+                        Ubah teks menjadi gambar brat dengan gaya unik menggunakan endpoint <code class="text-izuku">/api?text=</code> (format JPEG)
                     </p>
                 </div>
 
@@ -391,8 +402,8 @@
             } catch (error) {
                 console.error('Error loading API data:', error);
                 // Fallback data jika gagal load
-                document.getElementById('api-description').textContent = 'Brat Text Generator API - Simple and powerful tools API and easy to use';
-                document.getElementById('api-tagline').textContent = 'Brat Text Generator API - Simple and powerful tools API and easy to use';
+                document.getElementById('api-description').textContent = 'Brat Image Generator API - Convert text to JPEG images';
+                document.getElementById('api-tagline').textContent = 'Brat Image Generator API - Convert text to JPEG images';
                 document.getElementById('api-status').textContent = 'Online!';
                 document.getElementById('api-version').textContent = 'Corazon / Izumi / PxSx';
                 document.getElementById('api-creator').textContent = 'Izumi / PxSx';
@@ -430,12 +441,12 @@
             });
         }
 
-        // Brat Generator Logic
+        // Brat Image Generator Logic
         const textInput = document.getElementById('textInput');
         const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
         const resultContainer = document.getElementById('resultContainer');
-        const resultText = document.getElementById('resultText');
-        const copyBtn = document.getElementById('copyBtn');
+        const resultImage = document.getElementById('resultImage');
         const notification = document.getElementById('notification');
 
         // Function to show notification
@@ -449,24 +460,8 @@
             }, 3000);
         }
 
-        // Function to generate brat text
-        function generateBratText(text) {
-            // Simple transformation logic - you can replace this with your actual API call
-            const transformations = [
-                text => text.toUpperCase(),
-                text => text.split('').map(char => 
-                    Math.random() > 0.5 ? char.toUpperCase() : char.toLowerCase()
-                ).join(''),
-                text => text.replace(/a/gi, '4').replace(/e/gi, '3').replace(/i/gi, '1').replace(/o/gi, '0'),
-                text => text.split('').reverse().join('')
-            ];
-            
-            const randomTransform = transformations[Math.floor(Math.random() * transformations.length)];
-            return randomTransform(text);
-        }
-
-        // Generate button click handler
-        generateBtn.addEventListener('click', () => {
+        // Generate button click handler - Fetch ke API yang sudah ada
+        generateBtn.addEventListener('click', async () => {
             const inputText = textInput.value.trim();
             
             if (!inputText) {
@@ -475,44 +470,75 @@
             }
             
             // Show loading state
-            generateBtn.innerHTML = '<span class="material-icons text-sm mr-2">autorenew</span> Generating...';
+            generateBtn.innerHTML = '<span class="material-icons text-sm mr-2">autorenew</span> Loading...';
             generateBtn.disabled = true;
             
-            // Simulate API call delay
-            setTimeout(() => {
-                const bratText = generateBratText(inputText);
-                resultText.textContent = bratText;
+            try {
+                // Fetch ke endpoint API yang sudah ada
+                const response = await fetch(`/api?text=${encodeURIComponent(inputText)}`);
+                
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+                
+                // Get the image blob
+                const imageBlob = await response.blob();
+                
+                // Create object URL for the image
+                const imageUrl = URL.createObjectURL(imageBlob);
+                
+                // Display the image
+                resultImage.src = imageUrl;
                 resultContainer.classList.remove('hidden');
                 
+                // Store the image URL for download
+                resultImage.dataset.imageUrl = imageUrl;
+                resultImage.dataset.filename = `brat-${inputText.replace(/\s+/g, '-')}.jpg`;
+                
+                showNotification('Gambar berhasil di-load dari API!');
+                
+            } catch (error) {
+                console.error('Error fetching image:', error);
+                showNotification('Gagal memuat gambar dari API', 'error');
+            } finally {
                 // Reset button
                 generateBtn.innerHTML = '<span class="material-icons text-sm mr-2">send</span> Send Request';
                 generateBtn.disabled = false;
-                
-                showNotification('Brat text berhasil dibuat!');
-            }, 1000);
+            }
         });
 
-        // Copy button click handler
-        copyBtn.addEventListener('click', () => {
-            const textToCopy = resultText.textContent;
+        // Download button click handler
+        downloadBtn.addEventListener('click', () => {
+            const imageUrl = resultImage.dataset.imageUrl;
+            const filename = resultImage.dataset.filename;
             
-            if (!textToCopy) {
-                showNotification('Tidak ada teks untuk disalin!', 'error');
+            if (!imageUrl) {
+                showNotification('Tidak ada gambar untuk diunduh!', 'error');
                 return;
             }
             
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showNotification('Teks berhasil disalin!');
-            }).catch(err => {
-                showNotification('Gagal menyalin teks', 'error');
-                console.error('Failed to copy text: ', err);
-            });
+            // Create download link
+            const link = document.createElement('a');
+            link.download = filename || `brat-image-${Date.now()}.jpg`;
+            link.href = imageUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('Gambar berhasil diunduh!');
         });
 
         // Enter key support for text input
         textInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 generateBtn.click();
+            }
+        });
+
+        // Clean up object URLs when page is unloaded
+        window.addEventListener('beforeunload', () => {
+            if (resultImage.dataset.imageUrl) {
+                URL.revokeObjectURL(resultImage.dataset.imageUrl);
             }
         });
 
