@@ -472,36 +472,32 @@
             generateBtn.disabled = true;
             
             try {
-                // Fetch ke endpoint API yang sudah ada
+                // Fetch ke endpoint API yang sudah ada - langsung get buffer/image data
                 const response = await fetch(`/api?text=${encodeURIComponent(inputText)}`);
                 
                 if (!response.ok) {
-                    throw new Error('API request failed');
+                    throw new Error(`API request failed: ${response.status}`);
                 }
 
-                // Check content type
-                const contentType = response.headers.get('content-type');
+                // Get the image buffer directly as blob
+                const imageBlob = await response.blob();
                 
-                if (contentType && contentType.startsWith('image/')) {
-                    const blob = await response.blob();
-                    const imageUrl = URL.createObjectURL(blob);
-                    
-                    // Display the image
-                    resultImage.src = imageUrl;
-                    resultContainer.classList.remove('hidden');
-                    
-                    // Store the image URL for download
-                    resultImage.dataset.imageUrl = imageUrl;
-                    resultImage.dataset.filename = `brat-${inputText.replace(/\s+/g, '-')}.jpg`;
-                    
-                    showNotification('Gambar berhasil di-load dari API!');
-                } else {
-                    throw new Error('Response is not an image');
-                }
+                // Create object URL from blob
+                const imageUrl = URL.createObjectURL(imageBlob);
+                
+                // Display the image directly
+                resultImage.src = imageUrl;
+                resultContainer.classList.remove('hidden');
+                
+                // Store the image URL for download
+                resultImage.dataset.imageUrl = imageUrl;
+                resultImage.dataset.filename = `brat-${inputText.replace(/\s+/g, '-')}.jpg`;
+                
+                showNotification('Gambar berhasil di-load dari API!');
                 
             } catch (error) {
                 console.error('Error fetching image:', error);
-                showNotification('Gagal memuat gambar dari API', 'error');
+                showNotification('Gagal memuat gambar dari API: ' + error.message, 'error');
             } finally {
                 // Reset button
                 generateBtn.innerHTML = '<span class="material-icons text-sm mr-2">send</span> Send Request';
