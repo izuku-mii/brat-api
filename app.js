@@ -29,6 +29,10 @@ async function fetchCount() {
   }
 }
 
+app.get("/test", (req, res) => {
+  res.sendFile(path.join(__dirname, "html", "home.html"));
+});
+
 app.use('*', async (req, res) => {
   const text = req.query.text
   const background = req.query.background
