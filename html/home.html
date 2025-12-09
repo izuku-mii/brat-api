@@ -446,7 +446,7 @@ curl -X GET "https://izukumii-brat.hf.space/api?text=Brat+Image"
             
             // Generate mock image URL (replace with actual API response)
             // This is just for demonstration - replace with actual API call
-            const mockImageUrl = `https://via.placeholder.com/800x450/ec4899/ffffff?text=Brat:+"${encodeURIComponent(textInput.substring(0, 20))}"&.png`;
+            const mockImageUrl = `${API_BASE_URL}${API_ENDPOINT}?text=${encodedText}`;
             currentImageUrl = mockImageUrl;
             
             // Display the image
