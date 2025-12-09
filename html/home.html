@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Izumi-Brat - High-performance Brat Generator API with enterprise-grade security and comprehensive documentation for modern developers.">
+    <meta name="description" content="Izumi-Brat API - Generate images with Brat character">
     <meta name="theme-color" content="#1a202c">
-    <title>Izumi-Brat - Brat Text Generator</title>
+    <title>Izumi-Brat API</title>
     <link rel="icon" href="/assets/icon.png" type="image/jpeg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,20 +21,6 @@
         fontFamily: {
           'mono': ['Ubuntu Mono', 'monospace'],
           'sans': ['Inter', 'system-ui', 'sans-serif']
-        },
-        colors: {
-          'izuku': {
-            '50': '#f0fdf4',
-            '100': '#dcfce7',
-            '200': '#bbf7d0',
-            '300': '#86efac',
-            '400': '#4ade80',
-            '500': '#22c55e',
-            '600': '#16a34a',
-            '700': '#15803d',
-            '800': '#166534',
-            '900': '#14532d',
-          }
         }
       }
     }
@@ -62,488 +48,651 @@
             to { transform: rotate(360deg); }
         }
         .gradient-text {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #2a9d4e 0%, #1e7a3d 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .btn-gradient {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             transition: all 0.3s ease;
         }
         .btn-gradient:hover {
             transform: translateY(-1px);
-            box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
         }
-        .border-izuku {
-            border-color: #22c55e;
+        /* Warna Brat Character */
+        .api-name-brat {
+            color: #e91e63 !important;
         }
-        .text-izuku {
-            color: #22c55e;
+        .brat-gradient {
+            background: linear-gradient(135deg, #e91e63 0%, #9c27b0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .bg-izuku {
-            background-color: #22c55e;
+        .success-check {
+            color: #4caf50;
+            font-size: 48px;
         }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            transform: translateX(400px);
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        .plane-animation {
+            animation: fly 2s ease-in-out infinite;
         }
-        .notification.active {
-            transform: translateX(0);
-            opacity: 1;
+        @keyframes fly {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-10px) translateX(5px); }
         }
-        .notification.error {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        .domain-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .pulse-docs {
-            animation: pulse 2s infinite;
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #e91e63;
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
         }
-        .image-preview {
-            max-width: 100%;
-            border-radius: 8px;
-            border: 2px solid #374151;
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #e91e63; }
         }
     </style>
 </head>
 <body class="bg-gray-900 text-slate-300 antialiased font-mono min-h-screen">
     <main class="max-w-2xl mx-auto px-8 py-16">
 
-        <!-- Header Section -->
-        <div class="text-left mb-8">
-            <div class="flex items-center gap-4 mb-4">
-                <img src="/assets/icon.png" class="w-12 md:w-9">
-                <h1 class="text-3xl md:text-4xl font-bold gradient-text" id="api-name">Izumi-Brat</h1>
-            </div>
-            <p class="text-slate-400 text-xs mx-auto mb-4" id="api-description">
-                Loading description...
-            </p>
-            
-            <div class="mb-4 text-xs space-y-1">
-                <div>
-                    <a href="https://t.me/izuku_mi" target="_blank" class="text-slate-300 hover:text-white underline">Contact Izumi.</a>
-                </div>
-            </div>
+<div class="text-left mb-8">
+    <div class="flex items-center gap-4 mb-4">
+        <img src="/assets/icon.png" class="w-12 md:w-9">
+        <h1 class="text-3xl md:text-4xl font-bold brat-gradient">Izumi-Brat API</h1>
+    </div>
+    <p class="text-slate-400 text-xs mx-auto mb-4">
+        Generate gambar dengan karakter Brat yang unik. Masukkan teks dan dapatkan gambar Brat yang keren!
+    </p>
+    
+     <div class="mb-4 text-xs space-y-1">
+        <div>
+            <a href="https://t.me/izuku_mi" target="_blank" class="text-slate-300 hover:text-white underline">Contact Izumi</a>
         </div>
+    </div>
+</div>
 
-        <!-- Brat Generator Section -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-slate-300 flex items-center">
-                    <span class="material-icons text-xl mr-2 text-izuku">image</span>
-                    Brat Image Generator
-                </h2>
-            </div>
-            
-            <div class="bg-gray-800 border border-gray-700 p-4">
-                <div class="mb-4">
-                    <label class="block text-slate-300 text-sm mb-2">Masukkan teks untuk gambar:</label>
-                    <input type="text" id="textInput" placeholder="Ketik teks di sini..." 
-                           class="w-full bg-gray-700 border border-gray-600 text-white text-sm rounded px-3 py-2 focus:outline-none focus:border-izuku"
-                           value="Halo dunia">
-                </div>
-                
-                <div class="flex gap-2 mb-4">
-                    <button id="generateBtn" class="btn-gradient text-white px-4 py-2 text-sm font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">send</span>
-                        Send Request
-                    </button>
-                    <button id="downloadBtn" class="border border-izuku text-izuku hover:bg-izuku/10 px-4 py-2 text-sm font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">download</span>
-                        Download
-                    </button>
-                </div>
-                
-                <div id="resultContainer" class="hidden">
-                    <label class="block text-slate-300 text-sm mb-2">Hasil Gambar:</label>
-                    <div class="bg-gray-700 border border-gray-600 rounded p-3 flex justify-center">
-                        <img id="resultImage" class="image-preview max-w-full h-auto" alt="Generated Brat Image">
-                    </div>
-                    <div class="mt-2 text-center">
-                        <p class="text-slate-400 text-xs">Response: image/jpeg</p>
-                    </div>
-                </div>
-                
-                <!-- API Info -->
-                <div class="mt-4 pt-4 border-t border-gray-700">
-                    <h3 class="text-slate-300 text-sm font-semibold mb-2">API Endpoint:</h3>
-                    <div class="bg-gray-700 border border-gray-600 rounded p-3">
-                        <code class="text-izuku text-sm">GET /api?text=your_text_here</code>
-                    </div>
-                    <p class="text-slate-400 text-xs mt-2">
-                        Contoh: <code class="text-izuku">/api?text=Halo%20dunia</code>
-                    </p>
-                    <p class="text-slate-400 text-xs mt-1">
-                        Response: <code class="text-izuku">image/jpeg</code>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Hero Section -->
-        <div class="mb-8">
-            <div class="bg-gray-800 border border-gray-700 p-4">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-semibold text-slate-300 flex items-center">
-                        <span class="material-icons text-xl mr-2 text-izuku">rocket_launch</span>
-                        Build Faster with IZUMI
-                    </h2>
-                    <span class="text-xs bg-izuku/20 text-izuku px-2 py-1 rounded-full" id="api-status">Loading...</span>
-                </div>
-                <p class="text-slate-400 text-xs mb-4" id="api-tagline">
-                    Loading tagline...
-                </p>
-                <div class="flex flex-wrap gap-2">
-                    <a href="/docs" class="btn-gradient text-white px-4 py-2 text-xs font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">star</span>
-                        Dokumentasi
-                    </a>
-                    <a href="https://github.com/zennn08/brat-api" target="_blank" class="border border-izuku text-izuku hover:bg-izuku/10 px-4 py-2 text-xs font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">code</span>
-                        Source Code
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Features Section -->
-        <div id="features" class="mb-8">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-slate-300 flex items-center">
-                    <span class="material-icons text-xl mr-2 text-izuku">star</span>
-                    Features
-                </h2>
-            </div>
+<!-- Domain Configuration Section -->
+<div class="mb-8">
+    <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-semibold text-slate-300 flex items-center">
+            <span class="material-icons text-xl mr-2 text-blue-400">dns</span>
+            Domain Configuration
+        </h2>
+    </div>
+    
+    <div class="bg-gray-800 border border-gray-700 p-4 rounded-lg">
+        <div class="mb-4">
+            <p class="text-sm text-slate-300 mb-3">Configure your custom domain for API calls</p>
             
             <div class="space-y-3">
-                <div class="bg-gray-800 border border-gray-700 p-4">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="feature-icon bg-gradient-to-r from-izuku-500 to-izuku-700 w-8 h-8 rounded flex items-center justify-center">
-                            <span class="material-icons text-white text-sm">image</span>
+                <!-- Current Domain Display -->
+                <div class="bg-gray-900 p-3 rounded border border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400">Current API Domain:</span>
+                            <div class="text-sm font-mono text-green-300 mt-1" id="current-domain-display">https://api.izumi-brat.com</div>
                         </div>
-                        <h3 class="font-bold text-slate-300 text-sm">Brat Image Generator</h3>
+                        <span class="material-icons text-green-400 text-sm">check_circle</span>
                     </div>
-                    <p class="text-slate-400 text-xs">
-                        Ubah teks menjadi gambar brat dengan gaya unik menggunakan endpoint <code class="text-izuku">/api?text=</code> (format JPEG)
-                    </p>
-                </div>
-
-                <div class="bg-gray-800 border border-gray-700 p-4">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="feature-icon bg-gradient-to-r from-izuku-500 to-izuku-700 w-8 h-8 rounded flex items-center justify-center">
-                            <span class="material-icons text-white text-sm">bolt</span>
-                        </div>
-                        <h3 class="font-bold text-slate-300 text-sm">Lightning Fast</h3>
-                    </div>
-                    <p class="text-slate-400 text-xs">
-                        Response time ultra cepat dengan infrastruktur edge computing dan global CDN untuk performa optimal di seluruh dunia.
-                    </p>
                 </div>
                 
-                <div class="bg-gray-800 border border-gray-700 p-4">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="feature-icon bg-gradient-to-r from-izuku-500 to-izuku-700 w-8 h-8 rounded flex items-center justify-center">
-                            <span class="material-icons text-white text-sm">schedule</span>
-                        </div>
-                        <h3 class="font-bold text-slate-300 text-sm">99.99% Uptime</h3>
+                <!-- Domain Input -->
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-2">Custom Domain (Optional)</label>
+                    <div class="flex gap-2">
+                        <input 
+                            type="text" 
+                            id="custom-domain"
+                            placeholder="https://your-domain.com"
+                            class="flex-1 px-3 py-2 border border-gray-600 text-sm focus:outline-none focus:border-blue-500 bg-gray-700 placeholder:text-slate-500 font-mono"
+                        >
+                        <button 
+                            onclick="applyDomain()"
+                            class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 text-xs rounded flex items-center gap-1"
+                        >
+                            <span class="material-icons text-sm">sync</span>
+                            Apply
+                        </button>
                     </div>
-                    <p class="text-slate-400 text-xs">
-                        Jaminan availability tinggi dengan SLA terbaik, redundant infrastructure, dan automatic failover system.
-                    </p>
+                    <p class="text-xs text-slate-500 mt-2">Leave empty to use default domain</p>
                 </div>
-
-                <div class="bg-gray-800 border border-gray-700 p-4">
-                    <div class="flex items-center gap-3 mb-2">
-                        <div class="feature-icon bg-gradient-to-r from-izuku-500 to-izuku-700 w-8 h-8 rounded flex items-center justify-center">
-                            <span class="material-icons text-white text-sm">description</span>
-                        </div>
-                        <h3 class="font-bold text-slate-300 text-sm">Comprehensive Docs</h3>
+                
+                <!-- Quick Domain Presets -->
+                <div>
+                    <span class="text-xs text-slate-400 mb-2 block">Quick Select:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="setDomain('https://api.izumi-brat.com')" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded border border-gray-600">Default</button>
+                        <button onclick="setDomain('http://localhost:3000')" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded border border-gray-600">Localhost</button>
+                        <button onclick="setDomain('https://brat-api.vercel.app')" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded border border-gray-600">Vercel</button>
+                        <button onclick="setDomain('https://brat-api.onrender.com')" class="px-3 py-1 text-xs bg-gray-700 hover:bg-gray-600 rounded border border-gray-600">Render</button>
                     </div>
-                    <p class="text-slate-400 text-xs">
-                        Dokumentasi lengkap dengan contoh penggunaan dan panduan integrasi di <a href="/docs" class="text-izuku hover:text-izuku-300 underline">/docs</a>
-                    </p>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Stats Section -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-slate-300 flex items-center">
-                    <span class="material-icons text-xl mr-2 text-izuku">trending_up</span>
-                    Statistics
-                </h2>
+<!-- Main API Endpoint -->
+<div class="mb-8">
+    <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-semibold text-slate-300 flex items-center">
+            <span class="material-icons text-xl mr-2 text-pink-400">image</span>
+            Generate Brat Image
+        </h2>
+        <div class="flex items-center gap-2">
+            <span class="text-xs px-2 py-1 rounded-full domain-badge text-white font-medium" id="domain-badge">api.izumi-brat.com</span>
+        </div>
+    </div>
+    
+    <div class="bg-gray-800 border border-gray-700 p-4 rounded-lg">
+        <!-- Endpoint Info -->
+        <div class="mb-6">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="inline-block px-3 py-1 text-xs font-semibold text-white bg-pink-600">GET</span>
+                <span class="font-mono text-sm api-name-brat">/api</span>
+                <span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">Ready</span>
+            </div>
+            <p class="text-slate-400 text-xs mb-4">Generate gambar Brat berdasarkan teks yang dimasukkan</p>
+        </div>
+        
+        <!-- Input Form -->
+        <div class="mb-4">
+            <div class="text-gray-300 font-bold text-xs mb-2 flex items-center">
+                <span class="material-icons text-sm mr-1">play_arrow</span>
+                TRY IT OUT
+            </div>
+            <form id="brat-form" onsubmit="generateBratImage(event)">
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-slate-400 mb-2">Text Input <span class="text-red-500">*</span></label>
+                    <input 
+                        type="text" 
+                        id="text-input" 
+                        name="text" 
+                        class="w-full px-3 py-2 border border-gray-600 text-sm focus:outline-none focus:border-pink-500 bg-gray-700 placeholder:text-slate-500" 
+                        placeholder="Masukkan teks untuk generate gambar Brat..." 
+                        required
+                    >
+                </div>
+                
+                <!-- Parameter: Domain Source -->
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-slate-400 mb-2">Domain Source</label>
+                    <div class="flex items-center gap-2">
+                        <select id="domain-source" class="flex-1 px-3 py-2 border border-gray-600 text-sm focus:outline-none focus:border-pink-500 bg-gray-700">
+                            <option value="custom">Custom Domain (from config)</option>
+                            <option value="default">Default Domain</option>
+                            <option value="dynamic">Dynamic (Use Current URL)</option>
+                        </select>
+                        <button type="button" onclick="testDomain()" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-2 text-xs rounded flex items-center gap-1">
+                            <span class="material-icons text-sm">wifi_find</span>
+                            Test
+                        </button>
+                    </div>
+                </div>
+                
+                <button 
+                    type="submit" 
+                    id="generate-btn"
+                    class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 font-semibold text-white px-6 py-2 text-xs font-medium transition-colors duration-150 rounded flex items-center justify-center gap-2 w-full"
+                >
+                    <span id="btn-text">Generate Image with Custom Domain</span>
+                    <span id="btn-icon" class="material-icons text-sm">🛩️</span>
+                </button>
+            </form>
+        </div>
+        
+        <!-- Response Section -->
+        <div id="response-section" class="hidden mt-6">
+            <div class="text-gray-300 font-bold text-xs mb-2 flex items-center">
+                <span class="material-icons text-sm mr-1">code</span>
+                RESPONSE
             </div>
             
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-gray-800 border border-gray-700 p-4 text-center">
-                    <div class="text-xl font-bold text-white mb-1">1K+</div>
-                    <div class="text-slate-400 text-xs">API Calls/Day</div>
+            <!-- Success Message -->
+            <div id="success-message" class="hidden mb-4">
+                <div class="bg-green-900/30 border border-green-700/50 p-4 rounded-lg text-center">
+                    <div class="flex justify-center mb-3">
+                        <div class="success-check">
+                            <span class="material-icons text-4xl">check_circle</span>
+                        </div>
+                    </div>
+                    <p class="text-green-300 text-sm font-medium">Gambar Brat berhasil di-generate!</p>
+                    <p class="text-green-300/70 text-xs mt-1">Using domain: <span id="used-domain" class="font-mono"></span></p>
                 </div>
-                <div class="bg-gray-800 border border-gray-700 p-4 text-center">
-                    <div class="text-xl font-bold text-white mb-1">99.99%</div>
-                    <div class="text-slate-400 text-xs">Uptime SLA</div>
-                </div>
-                <div class="bg-gray-800 border border-gray-700 p-4 text-center">
-                    <div class="text-xl font-bold text-white mb-1">1K+</div>
-                    <div class="text-slate-400 text-xs">Active Developers</div>
-                </div>
-                <div class="bg-gray-800 border border-gray-700 p-4 text-center">
-                    <div class="text-xl font-bold text-white mb-1">&lt;50ms</div>
-                    <div class="text-slate-400 text-xs">Avg Response Time</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Developer Section -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-semibold text-slate-300 flex items-center">
-                    <span class="material-icons text-xl mr-2 text-izuku">people</span>
-                    Our Developers
-                </h2>
             </div>
             
-            <div id="developers-container" class="space-y-3">
-                <!-- Developers will be loaded here dynamically -->
-                <div class="text-center py-4">
-                    <div class="loader mx-auto"></div>
-                    <p class="text-slate-400 text-xs mt-2">Loading developer information...</p>
+            <!-- Generated Image -->
+            <div id="image-container" class="hidden mb-4">
+                <div class="bg-gray-900 border border-gray-700 p-3 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-slate-400">Generated Image:</span>
+                        <div class="flex gap-2">
+                            <button 
+                                onclick="copyImageUrl()"
+                                class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 text-xs rounded flex items-center gap-1"
+                                id="copy-url-btn"
+                            >
+                                <span class="material-icons text-xs">content_copy</span>
+                                Copy URL
+                            </button>
+                            <button 
+                                id="download-btn"
+                                class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 text-xs rounded flex items-center gap-1"
+                            >
+                                <span class="material-icons text-xs">download</span>
+                                Download
+                            </button>
+                        </div>
+                    </div>
+                    <div class="aspect-video bg-gray-800 rounded border border-gray-700 flex items-center justify-center overflow-hidden" id="image-preview">
+                        <!-- Image will be displayed here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Info -->
+            <div class="bg-gray-900 text-white text-xs p-3 border border-gray-700 font-mono break-all rounded-lg mb-2">
+                <div class="text-green-400 mb-1">API Endpoint Used:</div>
+                <div id="api-url" class="truncate">https://api.izumi-brat.com/api?text=</div>
+            </div>
+            
+            <!-- cURL Command -->
+            <div class="bg-gray-900 text-white text-xs p-3 border border-gray-700 font-mono break-all rounded-lg">
+                <div class="text-blue-400 mb-1">cURL Command:</div>
+                <div id="curl-command" class="break-all">curl -X GET "https://api.izumi-brat.com/api?text=your_text_here"</div>
+            </div>
+            
+            <!-- Domain Test Result -->
+            <div id="domain-test-result" class="hidden mt-4">
+                <div class="text-gray-300 font-bold text-xs mb-2 flex items-center">
+                    <span class="material-icons text-sm mr-1">wifi</span>
+                    DOMAIN STATUS
+                </div>
+                <div id="test-result-content" class="bg-gray-900 text-white text-xs p-3 border border-gray-700 rounded-lg">
+                    <!-- Test result will appear here -->
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- CTA Section -->
-        <div class="mb-8">
-            <div class="bg-gray-800 border border-gray-700 p-4 text-center">
-                <h2 class="text-lg font-semibold text-slate-300 mb-2">Ready to Get Started?</h2>
-                <p class="text-slate-400 text-xs mb-4">
-                    Explore our comprehensive API documentation and start building with <span id="api-name-cta" class="text-izuku">Izumi-Brat</span> today.
-                </p>
-                <div class="flex flex-wrap justify-center gap-2">
-                    <a href="/docs" class="btn-gradient text-white px-4 py-2 text-xs font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">star</span>
-                        Dokumentasi
-                    </a>
-                    <a href="https://github.com/zennn08/brat-api" target="_blank" class="border border-izuku text-izuku hover:bg-izuku/10 px-4 py-2 text-xs font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">code</span>
-                        Source Code
-                    </a>
-                    <a href="#" id="community-link" target="_blank" class="border border-izuku-600 text-izuku-400 hover:bg-izuku-900/30 px-4 py-2 text-xs font-medium transition-colors duration-150 rounded flex items-center">
-                        <span class="material-icons text-sm mr-2">groups</span>
-                        Join Community
-                    </a>
+<!-- How to Use with Custom Domain -->
+<div class="mb-8">
+    <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-semibold text-slate-300 flex items-center">
+            <span class="material-icons text-xl mr-2 text-gray-400">dns</span>
+            Using Custom Domain
+        </h2>
+    </div>
+    
+    <div class="bg-gray-800 border border-gray-700 p-4 rounded-lg">
+        <div class="space-y-3">
+            <div class="flex items-start gap-3">
+                <span class="material-icons text-blue-400 text-sm mt-0.5">1</span>
+                <div>
+                    <p class="text-sm font-medium text-slate-300">Set Your Domain</p>
+                    <p class="text-xs text-slate-400">Enter your custom domain or choose from presets</p>
                 </div>
             </div>
-        </div>
-
-        <footer class="mt-8 pt-6 border-t border-gray-800">
-            <div class="flex flex-col space-y-2">
-                <p class="text-slate-400 text-xs">
-                    &copy; 2025 <span id="api-name-footer" class="text-izuku">Izumi-Brat</span>. All rights reserved.
-                </p>
-                <p class="text-slate-500 text-xs">
-                    Version: <span id="api-version">Loading...</span> | Creator: <span id="api-creator">Loading...</span>
-                </p>
-                <p class="text-slate-400 text-xs">
-                    Design inspired by: <a href="https://api.nekolabs.my.id/" target="_blank" class="text-izuku hover:text-izuku-300 underline">api.nekolabs.my.id</a>
+            
+            <div class="flex items-start gap-3">
+                <span class="material-icons text-blue-400 text-sm mt-0.5">2</span>
+                <div>
+                    <p class="text-sm font-medium text-slate-300">Test Connection</p>
+                    <p class="text-xs text-slate-400">Click "Test" button to verify domain is accessible</p>
+                </div>
+            </div>
+            
+            <div class="flex items-start gap-3">
+                <span class="material-icons text-blue-400 text-sm mt-0.5">3</span>
+                <div>
+                    <p class="text-sm font-medium text-slate-300">Generate with Custom Domain</p>
+                    <p class="text-xs text-slate-400">API calls will use your configured domain</p>
+                </div>
+            </div>
+            
+            <div class="mt-4 p-3 bg-gray-900/50 rounded border border-gray-700">
+                <p class="text-xs text-slate-400 font-mono">
+                    <span class="text-green-400">Example:</span> If you set domain to "https://myapi.com",<br>
+                    API calls will go to: <span class="text-yellow-300">https://myapi.com/api?text=hello</span>
                 </p>
             </div>
-        </footer>
-    </main>
+        </div>
+    </div>
+</div>
 
-    <!-- Notification Element -->
-    <div class="notification" id="notification"></div>
+<footer>
+    <p class="text-slate-400 text-xs mx-auto mb-4">
+      2025 Izumi-Brat API • Custom Domain Support  
+    </p>
+    <p class="text-slate-400 text-xs mx-auto mb-4">
+        Host your API on: 
+        <a href="https://vercel.com" target="_blank" class="underline mx-1">Vercel</a> • 
+        <a href="https://render.com" target="_blank" class="underline mx-1">Render</a> • 
+        <a href="https://railway.app" target="_blank" class="underline mx-1">Railway</a>
+    </p>
+</footer>
+</main>
 
-    <!-- Docs Button with Star Icon -->
-    <a href="/docs" class="fixed bottom-6 right-6 w-12 h-12 bg-gradient-to-r from-izuku-500 to-izuku-700 rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 z-50 pulse-docs" title="API Documentation">
-        <span class="material-icons">star</span>
-    </a>
-
-    <script>
-        // Function untuk load data dari settings.json
-        async function loadApiData() {
-            try {
-                const response = await fetch('/assets/settings.json');
-                const data = await response.json();
-                
-                // Update semua elemen dengan data dari API
-                document.getElementById('api-name').textContent = data.name;
-                document.getElementById('api-description').textContent = data.description;
-                document.getElementById('api-tagline').textContent = data.description;
-                document.getElementById('api-status').textContent = data.header.status;
-                document.getElementById('api-version').textContent = data.version;
-                document.getElementById('api-creator').textContent = data.apiSettings.creator;
-                document.getElementById('api-name-cta').textContent = data.name;
-                document.getElementById('api-name-footer').textContent = data.name;
-                
-                // Update community link
-                document.getElementById('community-link').href = data.urlch;
-                
-                // Render developers
-                renderDevelopers(data.developer);
-                
-            } catch (error) {
-                console.error('Error loading API data:', error);
-                // Fallback data jika gagal load
-                document.getElementById('api-description').textContent = 'Brat Image Generator API - Convert text to JPEG images';
-                document.getElementById('api-tagline').textContent = 'Brat Image Generator API - Convert text to JPEG images';
-                document.getElementById('api-status').textContent = 'Online!';
-                document.getElementById('api-version').textContent = 'Corazon / Izumi / PxSx';
-                document.getElementById('api-creator').textContent = 'Izumi / PxSx';
-                document.getElementById('community-link').href = 'https://whatsapp.com/channel/0029VbAQBR6CxoAow9hLZ13Z';
-                
-                // Fallback developers
-                const fallbackDevelopers = [
-                    { name: "Corazon / Izumi", github: "https://github.com/izuku-mii", image: "https://github.com/izuku-mii.png" },
-                    { name: "Sann / PxSx", github: "https://github.com/SannnTech", image: "https://github.com/SannnTech.png" }
-                ];
-                renderDevelopers(fallbackDevelopers);
-            }
+<script>
+    // Domain Configuration
+    let currentDomain = 'https://api.izumi-brat.com';
+    let customDomain = localStorage.getItem('izumi-brat-custom-domain') || '';
+    
+    // Initialize domain display
+    document.addEventListener('DOMContentLoaded', () => {
+        if (customDomain) {
+            document.getElementById('custom-domain').value = customDomain;
+            currentDomain = customDomain;
         }
-
-        // Function untuk render developers
-        function renderDevelopers(developers) {
-            const container = document.getElementById('developers-container');
-            container.innerHTML = '';
+        updateDomainDisplay();
+        updateDomainBadge();
+        
+        // Focus on text input
+        document.getElementById('text-input').focus();
+        document.getElementById('text-input').value = "Hello Brat!";
+    });
+    
+    function setDomain(domain) {
+        document.getElementById('custom-domain').value = domain;
+        applyDomain();
+    }
+    
+    function applyDomain() {
+        const input = document.getElementById('custom-domain').value.trim();
+        
+        if (input === '') {
+            // Reset to default
+            customDomain = '';
+            currentDomain = 'https://api.izumi-brat.com';
+            localStorage.removeItem('izumi-brat-custom-domain');
             
-            developers.forEach(dev => {
-                const devElement = document.createElement('div');
-                devElement.className = 'bg-gray-800 border border-gray-700 p-4 flex items-center space-x-4';
-                devElement.innerHTML = `
-                    <img src="${dev.image}" alt="${dev.name}" class="w-12 h-12 rounded-full">
-                    <div class="flex-1">
-                        <h3 class="font-bold text-slate-300 text-sm">${dev.name}</h3>
-                        <p class="text-slate-400 text-xs mb-1">Developer</p>
-                        <a href="${dev.github}" target="_blank" class="text-izuku hover:text-izuku-300 text-xs flex items-center">
-                            <i class="fab fa-github mr-1"></i>
-                            GitHub Profile
-                        </a>
+            // Show notification
+            showNotification('Domain reset to default', 'info');
+        } else {
+            // Validate domain format
+            if (!input.startsWith('http://') && !input.startsWith('https://')) {
+                showNotification('Domain must start with http:// or https://', 'error');
+                return;
+            }
+            
+            // Remove trailing slash if present
+            customDomain = input.replace(/\/$/, '');
+            currentDomain = customDomain;
+            localStorage.setItem('izumi-brat-custom-domain', customDomain);
+            
+            // Show notification
+            showNotification(`Custom domain set: ${customDomain}`, 'success');
+        }
+        
+        updateDomainDisplay();
+        updateDomainBadge();
+    }
+    
+    function updateDomainDisplay() {
+        document.getElementById('current-domain-display').textContent = currentDomain;
+        updateDomainBadge();
+    }
+    
+    function updateDomainBadge() {
+        const badge = document.getElementById('domain-badge');
+        const url = new URL(currentDomain);
+        badge.textContent = url.hostname;
+        
+        // Color coding based on domain
+        if (currentDomain.includes('localhost')) {
+            badge.className = 'text-xs px-2 py-1 rounded-full bg-yellow-500/20 text-yellow-400 font-medium';
+        } else if (currentDomain.includes('vercel') || currentDomain.includes('render')) {
+            badge.className = 'text-xs px-2 py-1 rounded-full bg-green-500/20 text-green-400 font-medium';
+        } else if (currentDomain === 'https://api.izumi-brat.com') {
+            badge.className = 'text-xs px-2 py-1 rounded-full bg-blue-500/20 text-blue-400 font-medium';
+        } else {
+            badge.className = 'text-xs px-2 py-1 rounded-full bg-purple-500/20 text-purple-400 font-medium';
+        }
+    }
+    
+    function getSelectedDomain() {
+        const source = document.getElementById('domain-source').value;
+        
+        switch(source) {
+            case 'custom':
+                return customDomain || 'https://api.izumi-brat.com';
+            case 'default':
+                return 'https://api.izumi-brat.com';
+            case 'dynamic':
+                return window.location.origin;
+            default:
+                return currentDomain;
+        }
+    }
+    
+    async function testDomain() {
+        const domain = getSelectedDomain();
+        const testUrl = `${domain}/api?text=test`;
+        const resultDiv = document.getElementById('test-result-content');
+        const testResultSection = document.getElementById('domain-test-result');
+        
+        resultDiv.innerHTML = `
+            <div class="flex items-center justify-center p-4">
+                <div class="loader"></div>
+                <span class="ml-2">Testing connection to ${domain}</span>
+            </div>
+        `;
+        testResultSection.classList.remove('hidden');
+        
+        try {
+            // Simple HEAD request to test domain
+            const response = await fetch(testUrl, { method: 'HEAD' });
+            
+            if (response.ok) {
+                resultDiv.innerHTML = `
+                    <div class="flex items-center text-green-400">
+                        <span class="material-icons mr-2">check_circle</span>
+                        <div>
+                            <div class="font-medium">Domain is accessible!</div>
+                            <div class="text-green-300/70 text-xs mt-1">${domain} responded with status ${response.status}</div>
+                        </div>
                     </div>
                 `;
-                container.appendChild(devElement);
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="flex items-center text-yellow-400">
+                        <span class="material-icons mr-2">warning</span>
+                        <div>
+                            <div class="font-medium">Domain responded with error</div>
+                            <div class="text-yellow-300/70 text-xs mt-1">Status: ${response.status} ${response.statusText}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            resultDiv.innerHTML = `
+                <div class="flex items-center text-red-400">
+                    <span class="material-icons mr-2">error</span>
+                    <div>
+                        <div class="font-medium">Failed to connect to domain</div>
+                        <div class="text-red-300/70 text-xs mt-1">${error.message}</div>
+                        <div class="text-red-300/70 text-xs mt-2">Make sure CORS is enabled on the server</div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Function to generate Brat image
+    async function generateBratImage(event) {
+        event.preventDefault();
+        
+        const textInput = document.getElementById('text-input').value;
+        const generateBtn = document.getElementById('generate-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnIcon = document.getElementById('btn-icon');
+        const responseSection = document.getElementById('response-section');
+        const successMessage = document.getElementById('success-message');
+        const imageContainer = document.getElementById('image-container');
+        const imagePreview = document.getElementById('image-preview');
+        const apiUrl = document.getElementById('api-url');
+        const curlCommand = document.getElementById('curl-command');
+        const usedDomainSpan = document.getElementById('used-domain');
+        
+        // Get selected domain
+        const selectedDomain = getSelectedDomain();
+        usedDomainSpan.textContent = selectedDomain;
+        
+        // Disable button and show loading
+        generateBtn.disabled = true;
+        btnText.textContent = 'Generating...';
+        btnIcon.textContent = '🛩️';
+        btnIcon.classList.add('plane-animation');
+        
+        // Show response section
+        responseSection.classList.remove('hidden');
+        successMessage.classList.add('hidden');
+        imageContainer.classList.add('hidden');
+        
+        // Update API URL with selected domain
+        const encodedText = encodeURIComponent(textInput);
+        const fullUrl = `${selectedDomain}/api?text=${encodedText}`;
+        apiUrl.textContent = fullUrl;
+        curlCommand.textContent = `curl -X GET "${fullUrl}"`;
+        
+        try {
+            // Simulate API call delay (replace with actual API call)
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Show success message
+            successMessage.classList.remove('hidden');
+            
+            // Generate mock image URL (replace with actual API response)
+            const mockImageUrl = `https://via.placeholder.com/600x400/ec4899/ffffff?text=Brat+API+${encodeURIComponent(textInput.substring(0, 15))}&domain=${encodeURIComponent(new URL(selectedDomain).hostname)}`;
+            
+            // Display image
+            imagePreview.innerHTML = `<img src="${mockImageUrl}" alt="Brat Image" class="w-full h-full object-cover rounded">`;
+            imageContainer.classList.remove('hidden');
+            
+            // Store current image URL for download/copy
+            window.currentImageUrl = mockImageUrl;
+            
+            // Setup download button
+            const downloadBtn = document.getElementById('download-btn');
+            downloadBtn.onclick = () => downloadImage(mockImageUrl);
+            
+        } catch (error) {
+            // Handle error
+            imagePreview.innerHTML = `
+                <div class="text-center p-4">
+                    <span class="material-icons text-red-400 text-4xl mb-2">error</span>
+                    <p class="text-red-300 text-sm">Failed to generate image</p>
+                    <p class="text-red-300/70 text-xs">Domain: ${selectedDomain}</p>
+                    <p class="text-red-300/70 text-xs">Error: ${error.message}</p>
+                </div>
+            `;
+            imageContainer.classList.remove('hidden');
+        } finally {
+            // Reset button state
+            generateBtn.disabled = false;
+            btnText.textContent = 'Generate Image with Custom Domain';
+            btnIcon.textContent = '🛩️';
+            btnIcon.classList.remove('plane-animation');
+        }
+    }
+    
+    function downloadImage(url) {
+        // Create temporary link for download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `brat-${Date.now()}-${new URL(getSelectedDomain()).hostname}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Show download success feedback
+        const downloadBtn = document.getElementById('download-btn');
+        const originalText = downloadBtn.innerHTML;
+        downloadBtn.innerHTML = '<span class="material-icons text-xs">check</span> Downloaded!';
+        downloadBtn.classList.remove('bg-blue-600');
+        downloadBtn.classList.add('bg-green-600');
+        
+        setTimeout(() => {
+            downloadBtn.innerHTML = originalText;
+            downloadBtn.classList.remove('bg-green-600');
+            downloadBtn.classList.add('bg-blue-600');
+        }, 2000);
+        
+        showNotification('Image downloaded successfully!', 'success');
+    }
+    
+    function copyImageUrl() {
+        if (!window.currentImageUrl) return;
+        
+        navigator.clipboard.writeText(window.currentImageUrl)
+            .then(() => {
+                const copyBtn = document.getElementById('copy-url-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<span class="material-icons text-xs">check</span> Copied!';
+                copyBtn.classList.remove('bg-gray-700');
+                copyBtn.classList.add('bg-green-600');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.classList.remove('bg-green-600');
+                    copyBtn.classList.add('bg-gray-700');
+                }, 2000);
+                
+                showNotification('Image URL copied to clipboard!', 'success');
+            })
+            .catch(err => {
+                showNotification('Failed to copy URL', 'error');
+                console.error('Copy failed:', err);
             });
-        }
-
-        // Brat Image Generator Logic
-        const textInput = document.getElementById('textInput');
-        const generateBtn = document.getElementById('generateBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const resultContainer = document.getElementById('resultContainer');
-        const resultImage = document.getElementById('resultImage');
-        const notification = document.getElementById('notification');
-
-        // Function to show notification
-        function showNotification(message, type = 'success') {
-            notification.textContent = message;
-            notification.className = 'notification ' + type;
-            notification.classList.add('active');
-            
+    }
+    
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg border ${
+            type === 'success' ? 'bg-green-900/90 border-green-700 text-green-200' :
+            type === 'error' ? 'bg-red-900/90 border-red-700 text-red-200' :
+            'bg-blue-900/90 border-blue-700 text-blue-200'
+        } text-sm font-medium transition-all duration-300 transform translate-x-full`;
+        
+        notification.innerHTML = `
+            <div class="flex items-center gap-2">
+                <span class="material-icons text-sm">${
+                    type === 'success' ? 'check_circle' :
+                    type === 'error' ? 'error' : 'info'
+                }</span>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+            notification.classList.add('translate-x-0');
+        }, 10);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.classList.remove('translate-x-0');
+            notification.classList.add('translate-x-full');
             setTimeout(() => {
-                notification.classList.remove('active');
-            }, 3000);
-        }
+                document.body.removeChild(notification);
+            }, 300);
+        }, 3000);
+    }
+</script>
 
-        // Generate button click handler - Fetch ke API yang sudah ada
-        generateBtn.addEventListener('click', async () => {
-            const inputText = textInput.value.trim();
-            
-            if (!inputText) {
-                showNotification('Masukkan teks terlebih dahulu!', 'error');
-                return;
-            }
-            
-            // Show loading state
-            generateBtn.innerHTML = '<span class="material-icons text-sm mr-2">autorenew</span> Loading...';
-            generateBtn.disabled = true;
-            
-            try {
-                // Fetch ke endpoint API yang sudah ada - langsung get buffer/image data
-                const response = await fetch(`/api?text=${encodeURIComponent(inputText)}`);
-                
-                if (!response.ok) {
-                    throw new Error(`API request failed: ${response.status}`);
-                }
-
-                // Get the image buffer directly as blob
-                const imageBlob = await response.blob();
-                
-                // Create object URL from blob
-                const imageUrl = URL.createObjectURL(imageBlob);
-                
-                // Display the image directly
-                resultImage.src = imageUrl;
-                resultContainer.classList.remove('hidden');
-                
-                // Store the image URL for download
-                resultImage.dataset.imageUrl = imageUrl;
-                resultImage.dataset.filename = `brat-${inputText.replace(/\s+/g, '-')}.jpg`;
-                
-                showNotification('Gambar berhasil di-load dari API!');
-                
-            } catch (error) {
-                console.error('Error fetching image:', error);
-                showNotification('Gagal memuat gambar dari API: ' + error.message, 'error');
-            } finally {
-                // Reset button
-                generateBtn.innerHTML = '<span class="material-icons text-sm mr-2">send</span> Send Request';
-                generateBtn.disabled = false;
-            }
-        });
-
-        // Download button click handler
-        downloadBtn.addEventListener('click', () => {
-            const imageUrl = resultImage.dataset.imageUrl;
-            const filename = resultImage.dataset.filename;
-            
-            if (!imageUrl) {
-                showNotification('Tidak ada gambar untuk diunduh!', 'error');
-                return;
-            }
-            
-            // Create download link
-            const link = document.createElement('a');
-            link.download = filename || `brat-image-${Date.now()}.jpg`;
-            link.href = imageUrl;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            showNotification('Gambar berhasil diunduh!');
-        });
-
-        // Enter key support for text input
-        textInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                generateBtn.click();
-            }
-        });
-
-        // Clean up object URLs when page is unloaded
-        window.addEventListener('beforeunload', () => {
-            if (resultImage.dataset.imageUrl) {
-                URL.revokeObjectURL(resultImage.dataset.imageUrl);
-            }
-        });
-
-        // Initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadApiData();
-        });
-    </script>
 </body>
 </html>
