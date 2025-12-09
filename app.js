@@ -29,10 +29,6 @@ async function fetchCount() {
   }
 }
 
-app.get("/test", (req, res) => {
-  res.sendFile(path.join(__dirname, "html", "home.html"));
-});
-
 app.get('/api', async (req, res) => {
   const text = req.query.text
   const background = req.query.background
@@ -94,6 +90,11 @@ app.get('/api', async (req, res) => {
   await context.close();
 });
 
+app.use('*', async (req, res) => {
+  res.sendFile(path.join(__dirname, "html", "home.html"));
+});
+
+/*
 app.use('*', async (req, res) => {
   const text = req.query.text
   const background = req.query.background
@@ -166,6 +167,7 @@ app.use('*', async (req, res) => {
   }));
   await context.close();
 });
+*/
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
