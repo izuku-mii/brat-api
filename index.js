@@ -11,6 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(morgan('common'));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // Buat browser instance
 let browser;
